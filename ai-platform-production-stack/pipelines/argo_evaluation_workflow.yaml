@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: ai-eval-
+spec:
+  entrypoint: evaluation-pipeline
+  templates:
+    - name: evaluation-pipeline
+      dag:
+        tasks:
+          - name: load-dataset
+            template: load-dataset
+          - name: run-evaluation
+            dependencies: [load-dataset]
+            template: run-evaluation
+          - name: compute-metrics
+            dependencies: [run-evaluation]
+            template: compute-metrics
+          - name: quality-gate
+            dependencies: [compute-metrics]
+            template: quality-gate
+          - name: publish-results
+            dependencies: [quality-gate]
+            template: publish-results
+
+    - name: load-dataset
+      container:
+        image: python:3.11
+        command: ["sh", "-c"]
+        args: ["echo loading dataset"]
+
+    - name: run-evaluation
+      container:
+        image: python:3.11
+        workingDir: /src
+        command: ["sh", "-c"]
+        args: ["pip install -r requirements.txt && python -m evaluation.runner"]
+
+    - name: compute-metrics
+      container:
+        image: python:3.11
+        command: ["sh", "-c"]
+        args: ["echo compute metrics"]
+
+    - name: quality-gate
+      container:
+        image: python:3.11
+        command: ["sh", "-c"]
+        args: ["echo check quality gate"]
+
+    - name: publish-results
+      container:
+        image: python:3.11
+        command: ["sh", "-c"]
+        args: ["echo publish artifacts"]

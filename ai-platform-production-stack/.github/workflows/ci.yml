@@ -1,0 +1,22 @@
+name: ai-platform-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-and-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+      - name: Unit tests
+        run: pytest -q
+      - name: Offline evaluation quality gate
+        run: |
+          python -c "from evaluation.runner import EvaluationRunner; from llm.client import LLMClient; s=EvaluationRunner(LLMClient()).run('datasets/rag_eval_dataset.json'); print(s)"
