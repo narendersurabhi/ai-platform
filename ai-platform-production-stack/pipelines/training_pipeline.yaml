@@ -1,0 +1,7 @@
+name: ai-training-pipeline
+stages:
+  - data_validation
+  - feature_build
+  - model_training
+  - offline_evaluation
+  - model_registration

@@ -1,0 +1,14 @@
+[
+  {
+    "question": "Why was this claim flagged?",
+    "context": "Claim flagged because cited source conflicts with approved policy language.",
+    "expected_answer": "flagged due to policy inconsistency",
+    "checks": ["faithful_to_context", "no_hallucination"]
+  },
+  {
+    "question": "What caused manual review?",
+    "context": "Automated checks detect unverifiable claims and route them for manual validation.",
+    "expected_answer": "unverifiable claims triggered review",
+    "checks": ["faithful_to_context", "no_hallucination"]
+  }
+]
